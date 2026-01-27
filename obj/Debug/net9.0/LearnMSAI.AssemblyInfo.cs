@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("LearnMSAI")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+a08de083cf04b9621ec0779f0a8b93f133785e9d")]
 [assembly: System.Reflection.AssemblyProductAttribute("LearnMSAI")]
 [assembly: System.Reflection.AssemblyTitleAttribute("LearnMSAI")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

@@ -3,6 +3,7 @@ using OpenAI.Chat;
 using OpenAI;
 using System.Text;
 
+//Ollama
 ChatClient client = new(
     model: "llama3.2:latest",
     credential: new ApiKeyCredential("Ollama"),
@@ -11,14 +12,12 @@ ChatClient client = new(
         Endpoint = new Uri("http://localhost:11434/v1")
     }
 );
-
+//OPenAI
 //string apikey = Environment.GetEnvironmentVariable("OPENAI_API_KEY")!;
 //ChatClient client = new (model:"gpt-4o-mini", apikey);
 
 List<ChatMessage> history = new();
 Console.WriteLine("--- Chat started (Type 'exit' or 'quit' to stop) ---");
-
-
 
 while (true)
 {
