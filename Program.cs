@@ -3,6 +3,7 @@ using OpenAI.Chat;
 using OpenAI;
 using System.Text;
 
+
 //Ollama
 ChatClient client = new(
     model: "llama3.2:latest",
@@ -17,45 +18,81 @@ ChatClient client = new(
 //ChatClient client = new (model:"gpt-4o-mini", apikey);
 
 List<ChatMessage> history = new();
-Console.WriteLine("--- Chat started (Type 'exit' or 'quit' to stop) ---");
+Console.WriteLine("Команды: /file [путь], /clear, exit");
 
 while (true)
 {
+    Console.Write("You: ");
 
-    string rawInput = Console.ReadLine();
-    string userMessage;
+    string Input = Console.ReadLine()?.Trim() ?? "";
 
-    if (rawInput != null)
+    //Проверка
+    if (Input.ToLower() is "exit") break;
+
+    if (string.IsNullOrEmpty(Input)) continue;
+
+    if (Input.ToLower() is "clear")
     {
-        userMessage = rawInput.Trim();
+        history.Clear();
+        Console.WriteLine("[Система]: История очищена.");
+        continue;
     }
-    else
+
+    string finalPrompt = Input;
+
+    //Work with files
+    if (Input.StartsWith("/file"))
     {
-        userMessage = "";
-    }
-
-    if (string.IsNullOrEmpty(userMessage)) continue;
-    if (userMessage.ToLower() is "exit" or "quit") break;
-
-    history.Add(new UserChatMessage(userMessage));
-    var completionUpdates = client.CompleteChatStreamingAsync(history);
-
-    StringBuilder assistantResponce = new();
-
-
-    await foreach (StreamingChatCompletionUpdate update in completionUpdates)
-    {
-        if (update.ContentUpdate.Count > 0)
+        try
         {
-            string text = update.ContentUpdate[0].Text;
-            Console.Write(text);
-            assistantResponce.Append(text);
+            if (Input.Length <= 6) throw new Exception("Укажите путь к файлу после команды /file");
+            string path = Input.Substring(6).Trim();
+            string content = FileService.GetFileContent(path);
+
+            finalPrompt = $"Проанализируй файл {Path.GetFileName(path)}: \n\n``` {content}```";
+            Console.WriteLine($"[Система]: Файл загружен. (Text/PDF)");
 
         }
-        
+        catch (Exception ex)
+        {
+            Console.WriteLine($"[Ошибка]: {ex.Message}");
+            continue;
+        }
     }
-    Console.WriteLine();
-    history.Add(new AssistantChatMessage(assistantResponce.ToString()));
+    //Ответ ИИ
+    history.Add(new UserChatMessage(finalPrompt));
+    Console.Write("Assistant: ");
+    StringBuilder assistantResponse = new();
+
+    try
+    {
+
+        var completionUpdates = client.CompleteChatStreamingAsync(history);
+
+
+
+
+        await foreach (StreamingChatCompletionUpdate update in completionUpdates)
+        {
+            if (update.ContentUpdate.Count > 0)
+            {
+                string text = update.ContentUpdate[0].Text;
+                Console.Write(text);
+                assistantResponse.Append(text);
+
+            }
+
+        }
+        Console.WriteLine();
+        history.Add(new AssistantChatMessage(assistantResponse.ToString()));
+    }
+    catch (Exception ex)
+    {
+        Console.WriteLine($"\n[Ошибка API]: Убедитесь, что Ollama запущена. {ex.Message}");
+        if (history.Count > 0) history.RemoveAt(history.Count - 1);
+    }
+    
+    
 }
 ;
 
