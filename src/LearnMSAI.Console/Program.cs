@@ -2,6 +2,7 @@
 using OpenAI.Chat;
 using OpenAI;
 using System.Text;
+using LearnMSAI.Console;
 
 
 //Ollama

@@ -1,6 +1,8 @@
 using System.Text;
 using UglyToad.PdfPig;
 using UglyToad.PdfPig.Content;
+
+namespace LearnMSAI.Console;
 public static class FileService
 {
     private const long MaxFileSize = 1024 * 500; // 500 KB
@@ -23,7 +25,8 @@ public static class FileService
         return File.ReadAllText(path);
     }
 
-    private static string ReadPdf(string path) {
+    private static string ReadPdf(string path)
+    {
         StringBuilder text = new StringBuilder();
         try
         {

@@ -1,5 +1,6 @@
 <Solution>
   <Folder Name="/src/">
-    <Project Path="src/LearnMSAI/LearnMSAI.csproj" />
+    <Project Path="src/LearnMSAI.Console/LearnMSAI.Console.csproj" />
+    <Project Path="src/LearnMSAI.Web/LearnMSAI.Web.csproj" />
   </Folder>
 </Solution>
